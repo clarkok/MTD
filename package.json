@@ -1,0 +1,22 @@
+{
+  "name": "mtd",
+  "version": "0.0.1",
+  "description": "",
+  "main": "proxy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clarkok/MTD.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clarkok/MTD/issues"
+  },
+  "homepage": "https://github.com/clarkok/MTD#readme",
+  "dependencies": {
+    "anyproxy": "^3.7.7"
+  }
+}
