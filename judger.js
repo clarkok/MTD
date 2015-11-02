@@ -14,7 +14,7 @@ class Database {
     }
 
     clearForbiddenTable() {
-        forbidenTable = {};
+        this.forbidenTable = {};
     };
 
     isForbidden(ip){
@@ -22,22 +22,22 @@ class Database {
     };
 
     forbidIp(ip){
-        forbidenTable[ip] = 1;
+        this.forbidenTable[ip] = 1;
     };
 
     setMonitorDuration(duration){
-        duration = duration;
+        this.duration = duration;
     };
 
     incVisitsInPeriod(ip){
         var dateObj = new Date();
         var prefix = String(Math.floor(dateObj.getTime() / this.duration));
         if (prefix != this.oldPrefix) {
-            oldPrefix = prefix;
-            visitInPeriod = {};
-            totalVisit = 0;
+            this.oldPrefix = prefix;
+            this.visitInPeriod = {};
+            this.totalVisit = 0;
         }
-        totalVisit += 1;
+        this.totalVisit += 1;
         var tmp = this.visitInPeriod[prefix + ip];
         if (tmp == undefined) tmp = 0;
         else tmp += 1;
@@ -48,17 +48,17 @@ class Database {
         var dateObj = new Date();
         var prefix = String(Math.floor(dateObj.getTime() / this.dayDuration));
         if (this.lastVisitedDay[ip] != prefix){
-            lastVisitedDay[ip] = prefix;
+            this.lastVisitedDay[ip] = prefix;
             var tmp = this.visitDays[ip];
             if (tmp == undefined) tmp = 0;
             tmp += 1;
-            visitDays[ip] = tmp;
+            this.visitDays[ip] = tmp;
         }
         return this.visitDays[ip];
     };
 
     incVisitsInTotal(ip){
-        tmp = this.visitInTotal[ip];
+        var tmp = this.visitInTotal[ip];
         if (tmp == undefined) tmp = 0;
         tmp++;
         return this.visitInTotal[ip] = tmp;
@@ -73,8 +73,8 @@ class Judger {
     constructor () {
         this.database = new Database();
         this.isOpen = true;
-        this.MAX_FLOW_IN_ALL = 20;
-        this.MAX_FLOW_PER_IP = 10;
+        this.MAX_FLOW_IN_ALL = 10;
+        this.MAX_FLOW_PER_IP = 5;
         this.MIN_VALID_DAY_PER_IP = 1;
         this.MIN_VALID_VISIT_PER_IP = 1;
 
@@ -90,9 +90,9 @@ class Judger {
         if (!this.isDDos()) return true;
         else {
             if (this.database.isForbidden(ip) ||
-                visitsInPeriod > this.MAX_FLOW_PER_IP ||
-                visitsInTotal-1 < this.MIN_VALID_VISIT_PER_IP ||
-                visitedDayInTotal-1 < this.MIN_VALID_DAY_PER_IP ) {
+                this.visitsInPeriod > this.MAX_FLOW_PER_IP ||
+                this.visitsInTotal-1 < this.MIN_VALID_VISIT_PER_IP ||
+                this.visitedDayInTotal-1 < this.MIN_VALID_DAY_PER_IP ) {
                 this.database.forbidIp(ip);
                 return false;
             }

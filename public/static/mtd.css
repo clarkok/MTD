@@ -1,0 +1,88 @@
+body {
+	margin: 0;
+}
+
+h1 {
+	font-family: 微软雅黑;
+	font-size: 34px;
+	line-height: 120px;
+}
+
+#top {
+	width: 100%;
+	height: 120px;
+}
+
+#container {
+	width: 900px;
+	margin: 0 auto;
+}
+
+#graph {
+	width: 100%;
+	height: 250px;
+}
+
+#stat {
+	width: 100%;
+	height: 140px;
+}
+
+.grid {
+	width: 180px;
+	height: 110px;
+	border: 1px solid #aaa;
+	float: left;
+	padding: 10px;
+}
+
+.grid-wide {
+	width: 250px;
+	height: 110px;
+	border: 1px solid #aaa;
+	float: left;
+	padding: 10px;
+}
+
+.title {
+	font-size: 18px;
+	font-family: 微软雅黑;
+	color: #777;
+}
+
+.data {
+	font-size: 50px;
+	font-family: 微软雅黑;
+	text-align: center;
+	line-height: 50px;
+	margin: 20px;
+}
+
+.green {
+	color: green;
+}
+.red {
+	color: red;
+}
+
+#traffic {
+	width: 100%;
+	height: 200px;
+	overflow-y:scroll;
+}
+
+table {
+	width:880px;
+	margin: 0 auto;
+}
+
+thead tr {
+ POSITION: relative;  
+ TOP:0px; 
+ background:#cccccc;
+ text-align:center;
+}
+
+td {
+	text-align: center;
+}

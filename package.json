@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/clarkok/MTD#readme",
   "dependencies": {
-    "anyproxy": "^3.7.7"
+    "anyproxy": "^3.7.7",
+    "express": "^4.13.3"
   }
 }

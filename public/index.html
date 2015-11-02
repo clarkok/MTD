@@ -1,0 +1,160 @@
+<html>
+<head>
+	<title>MTD STATUS</title>
+	<script src="./static/socket.io.js"></script>
+	<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+	<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/exporting.js"></script>
+	<script type="text/javascript" src="./static/socket.io.js"></script>
+	<link type="text/css" rel="stylesheet" href="./static/mtd.css">
+</head>
+<body>
+	<div id="container">
+		<div id="top">
+			<h1>MTD Monitor</h1>
+		</div>
+		<div id="stat">
+			<div class="grid">
+				<div class="title">Total Request</div>
+				<div class="data" id="total">165</div>
+			</div>
+			<div class="grid">
+				<div class="title">Legal Request</div>
+				<div class="data" id="accept">165</div>
+			</div>
+			<div class="grid">
+				<div class="title">Malformed Request</div>
+				<div class="data" id="drop">165</div>
+			</div>
+			<div class="grid-wide">
+				<div class="title">Status</div>
+				<div class="data green" id="status">Safe</div>
+			</div>
+		</div>
+		<div id="graph">
+		</div>
+		<div id="traffic">
+			<table>
+				<thead><tr>
+					<td width=200px>TIME</td>
+					<td width=230px>SOURCE</td>
+					<td width=230px>DESTINATION</td>
+					<td width=100px>TYPE</td>
+					<td width=120px>JUDGE</td>
+				</tr></thead>
+			</table>
+		</div>
+	</div>
+	
+	
+	<script>
+		var series;
+		var lastMal = 0;
+		
+		function changeState(s) {
+			if (s == "Attacked") {
+				$('#status').attr('class', 'data red');
+			}
+			else {
+				$('#status').attr('class', 'data green');
+			}
+			$('#status').html(s);
+		}
+		
+		$(function () { 
+			var myDate = new Date();		
+			socket = io.connect('http://mac.clarkok.com:3000');		
+			$(document).ready(function() {                                                  
+				Highcharts.setOptions({                                                     
+					global: {                                                               
+						useUTC: false                                                       
+					}                                                                       
+				});                                                                         
+																							
+				var chart;                                                                  
+				$('#graph').highcharts({                                                
+					chart: {                                                                
+						type: 'spline',                                                     
+						animation: Highcharts.svg, // don't animate in old IE               
+						marginRight: 10,                                                    
+						events: {                                                           
+							load: function() {         
+								series = this.series[0];
+							}                                                               
+						}                                                                   
+					},                                                                      
+					title: {                                                                
+						text: 'Triffic Status'                                            
+					},                                                                      
+					xAxis: {                                                                
+						type: 'datetime',                                                   
+						tickPixelInterval: 150                                              
+					},                                                                      
+					yAxis: {                                                                
+						title: {                                                            
+							text: 'Value'                                                   
+						},                                                                  
+						plotLines: [{                                                       
+							value: 0,                                                       
+							width: 1,                                                       
+							color: '#808080'                                                
+						}]                                                                  
+					},                                                                      
+					tooltip: {                                                              
+						formatter: function() {                                             
+								return '<b>'+ this.series.name +'</b><br/>'+                
+								Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
+								Highcharts.numberFormat(this.y, 2);                         
+						}                                                                   
+					},                                                                      
+					legend: {                                                               
+						enabled: false                                                      
+					},                                                                      
+					exporting: {                                                            
+						enabled: false                                                      
+					},                                                                      
+					series: [{                                                              
+						name: 'Traffice',                                                
+						data: (function() {                                                                          
+							var data = [],                                                  
+								time = (new Date()).getTime(),                              
+								i;                                                          
+																							
+							for (i = -19; i <= 0; i++) {                                    
+								data.push({                                                 
+									x: time + i * 1000,                                     
+									y: 0                                       
+								});                                                         
+							}                                                             
+							return data;                                                    
+						})()                                                                
+					}]                                                                      
+				});  
+				socket.on('stat',function(json){
+					x = (new Date()).getTime();
+					y = json.total;
+					series.addPoint([x,y], true, true);
+					if (lastMal != json.dropped) {
+						changeState("Attacked");
+					}
+					else {
+						changeState("Safe");
+					}
+					lastMal = json.dropped;
+					$('#drop').html(json.dropped);
+					$('#accept').html(json.accept);
+					$('#total').html(json.total);
+				});
+				socket.on('request', function(json) {
+					var judge="<td class='green'>Legal</td>";
+					if (json.dropper) {
+						judge="<td class='red'>Malformed</td>";
+					}
+					html = "<tr><td>"+myDate.toLocaleTimeString()+"</td><td>"+json.source+"</td><td>"+json.dest+"</td><td>icmp</td>"+judge+"</tr>";
+					$('table').prepend(html);
+				});				
+			});
+		});
+	</script>                                                                               				
+	
+</html>
