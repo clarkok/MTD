@@ -147,7 +147,7 @@
 				});
 				socket.on('request', function(json) {
 					var judge="<td class='green'>Legal</td>";
-					if (json.dropper) {
+					if (json.dropped) {
 						judge="<td class='red'>Malformed</td>";
 					}
 					html = "<tr><td>"+myDate.toLocaleTimeString()+"</td><td>"+json.source+"</td><td>"+json.dest+"</td><td>icmp</td>"+judge+"</tr>";

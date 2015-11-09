@@ -20,13 +20,13 @@ class Socket {
         });
     }
 
-    onStat(total, accepted, dropped) {
+    onStat(total, accept, dropped) {
         total |= 0;
-        accepted |= 0;
+        accept |= 0;
         dropped |= 0;
         io.sockets.emit('stat', {
             total,
-            accepted,
+            accept,
             dropped
         });
     }

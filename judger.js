@@ -73,8 +73,8 @@ class Judger {
     constructor () {
         this.database = new Database();
         this.isOpen = true;
-        this.MAX_FLOW_IN_ALL = 10;
-        this.MAX_FLOW_PER_IP = 5;
+        this.MAX_FLOW_IN_ALL = 15;
+        this.MAX_FLOW_PER_IP = 8;
         this.MIN_VALID_DAY_PER_IP = 1;
         this.MIN_VALID_VISIT_PER_IP = 1;
 
@@ -90,9 +90,9 @@ class Judger {
         if (!this.isDDos()) return true;
         else {
             if (this.database.isForbidden(ip) ||
-                this.visitsInPeriod > this.MAX_FLOW_PER_IP ||
-                this.visitsInTotal-1 < this.MIN_VALID_VISIT_PER_IP ||
-                this.visitedDayInTotal-1 < this.MIN_VALID_DAY_PER_IP ) {
+                visitsInPeriod > this.MAX_FLOW_PER_IP ||
+                visitsInTotal-1 < this.MIN_VALID_VISIT_PER_IP ||
+                visitedDayInTotal-1 < this.MIN_VALID_DAY_PER_IP ) {
                 this.database.forbidIp(ip);
                 return false;
             }

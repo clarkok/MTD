@@ -50,7 +50,7 @@ class FrequencyDetecter {
     }
 };
 
-let load_controller = new FrequencyDetecter(5);
+let load_controller = new FrequencyDetecter(30);
 
 let LinsJudger = require('./judger.js');
 let lin_judger = new LinsJudger();
@@ -92,7 +92,7 @@ setInterval(
             console.log('Server status: ', load_controller.status ? 'OK' : 'DOWN');
             console.log('');
             let all = load_controller.freq;
-            socket.onStat(all, all - dropped_counter, dropped_counter);
+            socket.onStat(all + dropped_counter, all, dropped_counter);
             dropped_counter = 0;
         },
         1000
